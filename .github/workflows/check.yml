@@ -1,0 +1,94 @@
+# Every pull request: the games it changes must pass the kit's checks (npm run check-game), and only maintainers may change
+# anything outside games/. Pushes to main check every game.
+#
+# A pull request's code is never trusted. This workflow runs on `pull_request` (never `pull_request_target`), so a pull request
+# from a fork gets no secrets and a read-only token; it asks only to read the repository, and keeps no credentials in the checkout.
+# The repository's settings also hold a first-time contributor's workflow until a maintainer approves it.
+name: Check games
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+env:
+  # The kit whose checks every game must pass (github.com/kampuseapp/games-kit), pinned to one commit.
+  KIT_REF: 8e0520c677aa3806dd01f0df04a48943ac115ff2
+
+jobs:
+  check:
+    name: check-game
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: The games
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: catalog
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: The kit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: kampuseapp/games-kit
+          ref: ${{ env.KIT_REF }}
+          path: kit
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+
+      - name: Install the kit (without install scripts)
+        working-directory: kit
+        run: npm ci --ignore-scripts
+
+      - name: Which games to check
+        id: games
+        working-directory: catalog
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+          AUTHOR: ${{ github.event.pull_request.author_association }}
+        run: |
+          if [ "$EVENT" = pull_request ]; then
+            changed=$(git diff --name-only "$BASE"...HEAD)
+            outside=$(printf '%s\n' "$changed" | grep -v '^games/' | grep -v '^$' || true)
+            if [ -n "$outside" ] && [ "$AUTHOR" != OWNER ] && [ "$AUTHOR" != MEMBER ] && [ "$AUTHOR" != COLLABORATOR ]; then
+              echo "::error::A pull request may change only folders in games/. It also changes:"
+              printf '%s\n' "$outside"
+              exit 1
+            fi
+            ids=$(printf '%s\n' "$changed" | grep '^games/[^/]*/' | cut -d/ -f2 | sort -u)
+          else
+            ids=$(find games -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort)
+          fi
+          # Only folders that are still there (a pull request may remove a game).
+          keep=''
+          for id in $ids; do [ -d "games/$id" ] && keep="$keep $id"; done
+          echo "ids=$keep" >> "$GITHUB_OUTPUT"
+          echo "Games to check:${keep:- none}"
+
+      - name: npm run check-game
+        if: steps.games.outputs.ids != ''
+        working-directory: kit
+        env:
+          IDS: ${{ steps.games.outputs.ids }}
+        run: |
+          failed=0
+          for id in $IDS; do
+            echo "::group::$id"
+            # GitHub's bash runs with pipefail: the pipe fails when check-game does.
+            if ! npm run --silent check-game -- "$GITHUB_WORKSPACE/catalog/games/$id" 2>&1 | tee "report-$id.txt"; then failed=1; fi
+            echo "::endgroup::"
+            { echo "### games/$id"; echo '```'; cat "report-$id.txt"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          done
+          exit $failed
