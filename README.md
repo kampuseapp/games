@@ -1,9 +1,9 @@
-# Kampuse Games
+# Kampüse Games
 
-The games students play in [Kampuse](https://kampuse.com), made by anyone with the
+The games students play in [Kampüse](https://kampuse.com), made by anyone with the
 [Games Kit](https://github.com/kampuseapp/games-kit). One folder per game in [`games/`](games).
 
-**Merged is approved:** a merged version of a game can come to Kampuse.
+**Merged is approved:** a merged version of a game can come to Kampüse, where its maker is credited by their Kampüse username.
 
 ## Add a game
 
@@ -29,12 +29,12 @@ its folder.
 - **No tricks.** No `eval` or code built from text, no frames, forms or links out, no navigating or opening windows.
 - **Pure rules.** Only the kit, their own state, `ctx.random` and `ctx.now`, with `moves()` so they can be fuzzed.
 - **Small.** 5 MB in all, 1 MB a file, in plain web formats (code, HTML, CSS, JSON, images, sounds, `woff2` fonts).
-- **Fit for a campus.** No gambling with anything of real value, nothing hateful, sexual or violent, nothing posing as Kampuse.
+- **Fit for a campus.** No gambling with anything of real value, nothing hateful, sexual or violent, nothing posing as Kampüse.
 - **Phone first.** Portrait, about 360 × 640 and up, in Turkish and English.
 
 ## Safety
 
-Checks catch mistakes. Kampuse doesn't trust a game's code, even after review: see [SECURITY.md](SECURITY.md).
+Checks catch mistakes. Kampüse doesn't trust a game's code, even after review: see [SECURITY.md](SECURITY.md).
 
 ## Licence
 
