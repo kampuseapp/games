@@ -1,0 +1,9 @@
+{
+  "id": "tenis",
+  "name": "Tenis",
+  "emoji": "🎾",
+  "kind": "table",
+  "players": { "min": 2, "max": 2 },
+  "turnSeconds": 15,
+  "about": "Salonun kapalı kortunda kesintisiz ralli: kendi sahana dokunup koş, çember kapanırken rakip sahaya dokunup vur. Zamanlaman topun hızını belirler, zar yok. 3 oyun alan kazanır."
+}

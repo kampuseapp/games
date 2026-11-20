@@ -1,0 +1,46 @@
+/* Tenis: the court is the whole controller. The shared gym look is in gym.css. */
+.court-wrap { position: relative; flex: 1 1 auto; min-height: 0; display: grid; place-items: center; }
+.court {
+  width: auto;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  border: 3px solid var(--edge);
+  border-radius: var(--radius-m);
+  box-shadow: var(--lift);
+  aspect-ratio: 300 / 470;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* The six lanes you can tap: yours to run to, theirs to hit to. They light up when a tap there does something. */
+.zone { fill: transparent; stroke: transparent; stroke-width: 2; stroke-dasharray: 6 5; cursor: pointer; transition: fill var(--dur-fast); }
+.court[data-mode="toss"] .zone.run,
+.court[data-mode="receive"] .zone.run { fill: rgb(255 255 255 / 0.05); }
+.court[data-mode="swing"] .zone.hit,
+.court[data-mode="receive"] .zone.hit { fill: rgb(255 176 32 / 0.1); stroke: rgb(255 176 32 / 0.55); }
+.zone:active { fill: rgb(255 176 32 / 0.3); }
+
+.token { transition: transform linear; }
+.token .shadow { fill: rgb(0 0 0 / 0.35); }
+.token .body { fill: var(--tone); stroke: var(--edge); stroke-width: 3; transform-box: fill-box; transform-origin: center; }
+.token text { fill: var(--chalk); font: 900 15px var(--font-display); text-anchor: middle; }
+/* A hunch: where I'll set off to the moment the ball is struck. */
+.hunch { fill: none; stroke: var(--chalk); stroke-width: 2.5; stroke-dasharray: 5 5; opacity: 0.75; }
+
+.ball-body { fill: #d7f542; stroke: #6b7a12; stroke-width: 1.5; transform-box: fill-box; transform-origin: center; }
+.ball-shadow { fill: rgb(0 0 0 / 0.35); }
+.ball[data-kind="smash"] .ball-body { fill: #ff7a3d; stroke: #7a2a08; }
+.ball[data-kind="lob"] .ball-body { fill: #f4f7c9; }
+/* The ring closes on the ball: swing when they meet. Theirs is dim: it is not mine to hit. */
+.ring { fill: none; stroke: var(--chalk); stroke-width: 3; transform-box: fill-box; transform-origin: center; }
+.cue.dim .ring { stroke: rgb(243 239 230 / 0.35); stroke-width: 2; }
+
+.rally { fill: rgb(243 239 230 / 0.5); font: 900 22px var(--font-display); letter-spacing: 0.1em; transform-box: fill-box; transform-origin: center; }
+.rally[data-heat="warm"] { fill: var(--led); }
+.rally[data-heat="hot"] { fill: #ff7a3d; }
+
+.told { min-height: 16px; margin: 0; color: var(--chalk-dim); font-size: 12px; font-weight: 600; text-align: center; }
+.keys { display: none; margin: 0; color: var(--chalk-dim); font: 600 11px var(--font-body); text-align: center; opacity: 0.8; }
+@media (hover: hover) and (pointer: fine) { .keys { display: block; } }
