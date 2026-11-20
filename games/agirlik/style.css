@@ -1,0 +1,169 @@
+/* Ağırlık Kapışması: a ladder of stages, a lane for every lifter, and two pads to hammer. The shared gym look is in gym.css. */
+.app { gap: 7px; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+
+/* ---------- the ladder: the stage in hand and what it asks, then every rung, with who is on it ---------- */
+.meet {
+  flex: none;
+  display: grid;
+  gap: 6px;
+  padding: 7px 9px 11px;
+  border: 2px solid var(--edge);
+  border-radius: var(--radius-s);
+  background: linear-gradient(180deg, #101215, #191c21);
+}
+.now { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 0 7px; margin: 0; font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; }
+.now b { font-size: 23px; letter-spacing: 0.02em; }
+.now small { margin: 0; font-size: 10px; letter-spacing: 0.04em; text-transform: none; }
+.ladder { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 3px; margin: 0; padding: 0; list-style: none; }
+.ladder li { position: relative; display: grid; place-items: center; height: 19px; border-radius: 5px; background: rgb(255 255 255 / 0.07); color: var(--chalk-dim); }
+.ladder b { font: 800 11px/1 var(--font-led); font-variant-numeric: tabular-nums; }
+/* Made: green and behind me. On: the rung I am lifting at, ringed. The dots are the others, in their colours. */
+.ladder .made { background: var(--ok); color: #0b0c0e; }
+.ladder .on { background: rgb(255 176 32 / 0.16); color: var(--led); box-shadow: 0 0 0 2px var(--led); }
+.ladder .dots { position: absolute; left: 50%; bottom: -6px; display: flex; gap: 1px; transform: translateX(-50%); }
+.ladder i { width: 8px; height: 8px; border: 1px solid #0b0c0e; border-radius: 50%; background: var(--tone); }
+.ladder i.out { opacity: 0.4; }
+
+/* ---------- the lifters: a lane each, filling as their taps come in ---------- */
+.lifters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; flex: none; }
+.chip {
+  position: relative;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 7px 5px 5px;
+  overflow: hidden;
+  border: 2px solid var(--edge);
+  border-left: 5px solid var(--tone);
+  border-radius: var(--radius-s);
+  background: var(--panel);
+}
+.chip.me { background: var(--panel-2); }
+.chip.gone { opacity: 0.45; }
+/* The lane: the lifter's colour creeping across as the count climbs (the number beside it says the same). */
+.chip .lane { position: absolute; inset: 0; background: var(--tone); opacity: 0.32; transform: scaleX(0); transform-origin: left; transition: transform 200ms linear; }
+.chip > :not(.lane) { position: relative; }
+.chip img { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--tone); }
+.chip .who { display: grid; min-width: 0; }
+.chip b { overflow: hidden; font: 800 12px/1.15 var(--font-display); letter-spacing: 0.02em; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+/* Under the name: the stage they are on, and their lives as pips (the last one in red). */
+.chip .who small { display: flex; align-items: center; gap: 5px; margin: 0; color: var(--chalk-dim); font: 700 9px/1.3 var(--font-body); letter-spacing: 0.04em; white-space: nowrap; }
+.chip .lives { color: var(--led); font-size: 8px; letter-spacing: 1.5px; }
+.chip .lives.last { color: var(--bad); }
+.chip .state { min-width: 40px; color: var(--chalk); font: 800 13px var(--font-led); font-variant-numeric: tabular-nums; text-align: right; }
+.chip .state.ok { color: var(--ok); font-size: 17px; }
+.chip .state.no { color: var(--bad); font-size: 17px; }
+
+/* ---------- the platform: the bar climbing, the gauge beside it, the count over it ---------- */
+.platform {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 118px;
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  align-items: end;
+  gap: 8px;
+  padding: 8px 10px 10px 8px;
+  border: 2px solid var(--edge);
+  border-radius: var(--radius-m);
+  /* A wooden lifting platform with rubber sides. */
+  background:
+    linear-gradient(90deg, #1b1d21 0 20%, transparent 20% 86%, #1b1d21 86%),
+    repeating-linear-gradient(90deg, #b9864f 0 22px, #a8783f 22px 23px);
+  box-shadow: inset 0 -10px 22px rgb(0 0 0 / 0.35), var(--lift);
+  overflow: hidden;
+}
+.bar { width: 100%; max-width: 320px; height: 100%; min-height: 0; max-height: 132px; justify-self: center; will-change: transform; transition: transform 70ms linear; }
+.gauge {
+  position: relative;
+  height: 100%;
+  border: 2px solid var(--edge);
+  border-radius: 8px;
+  background: #0e1013;
+}
+.gauge .fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background: linear-gradient(0deg, var(--bad), var(--led) 55%, var(--ok));
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 70ms linear;
+}
+.gauge .lock { position: absolute; inset-inline: -2px; top: -2px; height: 4px; background: var(--chalk); }
+.gauge .lock small { position: absolute; left: 50%; top: 6px; color: var(--chalk); font: 800 7px var(--font-display); letter-spacing: 0.06em; transform: translateX(-50%); }
+.shout {
+  position: absolute;
+  left: 56%;
+  top: 40%;
+  margin: 0;
+  padding: 2px 12px;
+  border-radius: 8px;
+  background: rgb(11 12 14 / 0.78);
+  color: var(--chalk);
+  font: 900 30px/1.1 var(--font-display);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.shout:empty { display: none; }
+.shout.good { color: var(--ok); }
+.shout.bad { color: var(--bad); }
+/* The line over the big word: which stage this is, and whether it is a second go or the last life. */
+.shout small { display: block; margin: 2px 0 0; color: var(--chalk-dim); font: 800 12px/1.2 var(--font-display); letter-spacing: 0.12em; text-align: center; }
+.shout.bad small { color: var(--bad); }
+/* The count: how many taps are in, of how many. The thing to watch while hammering. */
+.count { position: absolute; right: 10px; top: 6px; padding: 2px 8px; border-radius: 6px; background: rgb(11 12 14 / 0.75); font-size: 24px; }
+.count:empty { display: none; }
+.count[data-done="true"] { color: var(--ok); text-shadow: 0 0 10px rgb(61 220 132 / 0.5); }
+
+.time { flex: none; height: 6px; overflow: hidden; border-radius: 3px; background: rgb(255 255 255 / 0.08); }
+.time span { display: block; height: 100%; background: var(--led); transform-origin: left; }
+.told { flex: none; min-height: 15px; margin: 0; color: var(--chalk-dim); font: 600 12px var(--font-body); text-align: center; }
+.app > .status { flex: none; }
+
+/* ---------- the two pads: all there is to do ---------- */
+.hands { flex: 1.25 1 0; min-height: 140px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.hand {
+  display: grid;
+  place-content: center;
+  gap: 4px;
+  border: 3px solid var(--edge);
+  border-radius: var(--radius-m);
+  box-shadow: 0 5px 0 var(--edge);
+  background: linear-gradient(180deg, #ff6b6e, #d43a3d);
+  color: var(--chalk);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity var(--dur-fast);
+}
+.hand b { font: 900 34px/1 var(--font-display); letter-spacing: 0.06em; }
+.hand small { color: rgb(255 255 255 / 0.85); font: 700 11px var(--font-body); }
+.hand:focus-visible { outline: 3px solid var(--led); outline-offset: 2px; }
+/* The pads wake up when the bar is mine to lift. */
+.app:not([data-phase="lift"]) .hand { opacity: 0.4; box-shadow: 0 2px 0 var(--edge); }
+
+.keys { display: none; flex: none; margin: 0; color: var(--chalk-dim); font: 600 11px var(--font-body); text-align: center; opacity: 0.8; }
+@media (hover: hover) and (pointer: fine) { .keys { display: block; } }
+
+.foot { flex: none; display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 30px; padding-right: 40px; }
+.chalk {
+  min-height: 28px;
+  padding: 0 12px;
+  border: 2px solid var(--edge);
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--chalk);
+  font: 700 11px var(--font-body);
+  cursor: pointer;
+}
+.chalk[aria-pressed="true"] { border-color: var(--led); color: var(--led); }
+.chalk:disabled { cursor: default; opacity: 0.45; }
+.chalk:focus-visible { outline: 2px solid var(--led); outline-offset: 2px; }
+
+.podium { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; margin-top: 4px; font: 700 16px/1.3 var(--font-body); text-align: left; }
+.podium b { font-family: var(--font-led); }

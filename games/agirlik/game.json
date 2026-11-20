@@ -1,0 +1,9 @@
+{
+  "id": "agirlik",
+  "name": "Ağırlık Kapışması",
+  "emoji": "🏋️",
+  "kind": "table",
+  "players": { "min": 2, "max": 4 },
+  "turnSeconds": 16,
+  "about": "2-4 kişilik halter merdiveni: her aşama daha çok tık ister. Süresinde tutturan bir üst aşamaya çıkar, kaçıran bir hak yakar. Üç hakkı biten elenir; en yükseğe çıkan kazanır."
+}
