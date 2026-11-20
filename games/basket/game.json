@@ -1,0 +1,9 @@
+{
+  "id": "basket",
+  "name": "Basket 1v1",
+  "emoji": "🏀",
+  "kind": "table",
+  "players": { "min": 2, "max": 2 },
+  "turnSeconds": 12,
+  "about": "Yarı sahada birebir: savunma sürüşe refleksle kayar ya da tahmin edip kumar oynar; şut zamanlama çubuğuyla, blok ve ribaunt refleksle. 11'e ilk ulaşan kazanır."
+}

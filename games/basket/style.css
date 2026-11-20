@@ -1,0 +1,45 @@
+/* Basket 1v1: the half court and its two players. The shared gym look is in gym.css. */
+.court-wrap { position: relative; flex: 1 1 auto; min-height: 0; display: grid; place-items: center; }
+.court {
+  width: auto;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  border: 3px solid var(--edge);
+  border-radius: var(--radius-m);
+  box-shadow: var(--lift);
+  aspect-ratio: 300 / 330;
+}
+
+/* The three shooting zones: dark until a shot or guard choice points at one. */
+.zone { fill: transparent; transition: fill var(--dur-fast); }
+.court[data-zone="layup"] .z-layup,
+.court[data-zone="jumper"] .z-jumper,
+.court[data-zone="three"] .z-three { fill: rgb(255 176 32 / 0.32); }
+
+.token { transition: transform var(--dur) var(--ease-out); }
+.token .shadow { fill: rgb(0 0 0 / 0.3); }
+.token .body { fill: var(--tone); stroke: var(--edge); stroke-width: 3; }
+.token .arms { fill: none; stroke: var(--tone); stroke-width: 3; stroke-dasharray: 10 6; opacity: 0.8; }
+.token text { fill: var(--chalk); font: 900 15px var(--font-display); text-anchor: middle; }
+
+.ball { transition: transform var(--dur) var(--ease-out); }
+.ball circle { fill: #ff7a1a; stroke: #5a2a08; stroke-width: 1.5; }
+
+.told { min-height: 16px; margin: 0; color: var(--chalk-dim); font-size: 12px; font-weight: 600; text-align: center; }
+.choices .pad { min-height: 66px; }
+.choices .pad small { font-variant-numeric: tabular-nums; }
+
+/* Reflexes: the release meter, big pads for a reaction, one huge button to jump or grab. */
+.controls { display: grid; gap: 8px; }
+.swing { display: grid; gap: 4px; }
+.choices .pad, .extra .pad { touch-action: manipulation; user-select: none; }
+.choices.big .pad { min-height: 84px; font-size: 17px; border-color: var(--led); animation: urge 420ms ease-in-out infinite alternate; }
+.extra:empty { display: none; }
+.pad.wide { width: 100%; min-height: 44px; grid-template-columns: auto auto; justify-content: center; column-gap: 8px; }
+.pad.wide .icon { font-size: 20px; }
+.pad.huge { min-height: 96px; font-size: 26px; letter-spacing: 0.08em; border-color: var(--led); background: linear-gradient(180deg, #ffc24a, var(--led)); color: #1a1205; animation: urge 360ms ease-in-out infinite alternate; }
+.pad.huge .icon { font-size: 30px; }
+@keyframes urge { to { box-shadow: 0 0 0 4px var(--led-glow), var(--press); } }
+@media (prefers-reduced-motion: reduce) { .choices.big .pad, .pad.huge { animation: none; box-shadow: 0 0 0 4px var(--led-glow), var(--press); } }
+.cue { font: 900 64px var(--font-display); fill: var(--led); stroke: var(--edge); stroke-width: 3; paint-order: stroke; opacity: 0; pointer-events: none; }
